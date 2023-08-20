@@ -5,5 +5,7 @@ import "github.com/google/uuid"
 type UserID uuid.UUID
 
 type User struct {
-	ID UserID
+	ID    UserID
+	Name  string
+	Email string
 }
