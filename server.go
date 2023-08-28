@@ -1,7 +1,9 @@
 package main
 
 import (
+	"database/sql"
 	"net/http"
+	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,6 +20,14 @@ func getSlots(c echo.Context) error {
 }
 
 func main() {
+
+	db, err := sql.Open("sqlite3", "./foo.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	
 	e := echo.New()
 	e.PUT("/slots/:id", saveSlot)
 	e.GET("/slots", getSlots)
