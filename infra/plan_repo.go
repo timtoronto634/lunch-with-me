@@ -1,7 +1,18 @@
 package infra
 
-import "github.com/aws/aws-sdk-go/aws/client"
+import (
+	"echo-me/domain/entity/plan"
+
+	"github.com/jackc/pgx/v5"
+)
 
 type PlanRepo struct {
-	client
+	conn pgx.QueryExecMode
+}
+
+func (r *PlanRepo) Save(plan plan.Plan) error {
+	return nil
+}
+func (r *PlanRepo) GetByResearvationID(reservationID plan.ReservationID) plan.Plan {
+	return plan.Plan{}
 }
