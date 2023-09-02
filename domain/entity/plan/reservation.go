@@ -1,7 +1,7 @@
 package plan
 
 import (
-	"echo-me/entity/user"
+	"echo-me/domain/entity/user"
 
 	"github.com/google/uuid"
 )
