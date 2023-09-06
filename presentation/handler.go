@@ -12,7 +12,7 @@ type Server struct {
 	e *echo.Echo
 }
 
-func NewServer() *Server {
+func SetupServer() *Server {
 	s := &Server{
 		e: echo.New(),
 	}

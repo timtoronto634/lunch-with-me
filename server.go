@@ -28,6 +28,6 @@ func main() {
 		fmt.Printf("Sentry initialization failed: %v", err)
 	}
 
-	server := presentation.NewServer()
+	server := presentation.SetupServer()
 	server.Start(":1323")
 }
