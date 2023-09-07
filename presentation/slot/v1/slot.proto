@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package presentation.slot.v1;
+
+option go_package = "echo-me/presentation/gen/slot/v1;slotv1";
+
+message SaveSlotRequest {
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message SaveSlotResponse {
+  int64 id = 1;
+}
+
+service SaveSlotService {
+  rpc SaveSlot(SaveSlotRequest) returns (SaveSlotResponse) {}
+}
