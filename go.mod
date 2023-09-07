@@ -5,11 +5,13 @@ go 1.21
 toolchain go1.21.0
 
 require (
+	connectrpc.com/connect v1.11.1
 	github.com/getsentry/sentry-go v0.23.0
 	github.com/google/uuid v1.3.0
 	github.com/jackc/pgx/v5 v5.4.3
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/mattn/go-sqlite3 v1.14.17
+	google.golang.org/protobuf v1.31.0
 )
 
 require (
