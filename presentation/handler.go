@@ -2,9 +2,8 @@ package presentation
 
 import (
 	"context"
-	slotv1 "echo-me/presentation/gen/slot/v1"
-	"echo-me/presentation/gen/slot/v1/slotv1connect"
-	"errors"
+	slotv1 "echo-me/gen/proto/v1"
+	"echo-me/gen/proto/v1/slotv1connect"
 	"net/http"
 
 	"connectrpc.com/connect"
@@ -31,12 +30,10 @@ func SetupServer() *Server {
 	}
 	s.e.Use(sentryecho.New(sentryecho.Options{Repanic: false}))
 	slotService := slotService{}
-	path, handler := slotv1connect.NewSaveSlotServiceHandler(slotService)
+	path, handler := slotv1connect.NewSlotServiceHandler(slotService)
 
-	s.e.POST(path+"SaveSlot", echo.WrapHandler(handler))
-	s.e.PUT("/slots/:id", saveSlot)
+	s.e.POST(path, echo.WrapHandler(handler))
 	s.e.GET("/slots", getSlots)
-	s.e.GET("/er", getError)
 	return s
 }
 
@@ -44,17 +41,6 @@ func (s *Server) Start(addr string) {
 	s.e.Start(addr)
 }
 
-func saveSlot(c echo.Context) error {
-	id := c.Param("id")
-	name := c.FormValue("name")
-	email := c.FormValue("email")
-	return c.String(http.StatusOK, id+". name:"+name+", email:"+email)
-}
-
 func getSlots(c echo.Context) error {
 	return c.String(http.StatusOK, "get slots")
-}
-
-func getError(c echo.Context) error {
-	return errors.New("mock error")
 }
