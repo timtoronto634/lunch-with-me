@@ -33,7 +33,7 @@ func SetupServer() *Server {
 	s.e.Use(LoggingMiddleware)
 	path, handler := slotv1connect.NewSlotServiceHandler(slotService{})
 	fmt.Println(path, handler)
-	s.e.POST(path, echo.WrapHandler(handler))
+	s.e.POST(path+"*", echo.WrapHandler(handler))
 	s.e.GET("/slots", getSlots)
 	return s
 }
