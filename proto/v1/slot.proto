@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package presentation.slot.v1;
+package proto.v1;
 
-option go_package = "echo-me/presentation/gen/slot/v1;slotv1";
+option go_package = "echo-me/gen/proto/v1;slotv1";
 
 message SaveSlotRequest {
   int64 id = 1;
@@ -14,6 +14,6 @@ message SaveSlotResponse {
   int64 id = 1;
 }
 
-service SaveSlotService {
+service SlotService {
   rpc SaveSlot(SaveSlotRequest) returns (SaveSlotResponse) {}
 }
