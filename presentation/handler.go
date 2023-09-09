@@ -20,6 +20,10 @@ type Server struct {
 type slotService struct{}
 
 func (s slotService) SaveSlot(ctx context.Context, req *connect.Request[slotv1.SaveSlotRequest]) (*connect.Response[slotv1.SaveSlotResponse], error) {
+	err := req.Msg.ValidateAll()
+	if err != nil {
+		return nil, err
+	}
 	res := connect.NewResponse(&slotv1.SaveSlotResponse{
 		Id: 1,
 	})
