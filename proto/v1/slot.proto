@@ -2,10 +2,12 @@ syntax = "proto3";
 
 package proto.v1;
 
+import "validate/validate.proto";
+
 option go_package = "echo-me/gen/proto/v1;slotv1";
 
 message SaveSlotRequest {
-  int64 id = 1;
+  int64 id = 1 [(validate.rules).int64.gt = 999];
   string name = 2;
   string email = 3;
 }
