@@ -1,18 +1,23 @@
 package infra
 
 import (
+	"context"
+	"database/sql"
 	"echo-me/domain/entity/plan"
-
-	"github.com/jackc/pgx/v5"
+	"echo-me/domain/repository"
 )
 
 type PlanRepo struct {
-	conn pgx.QueryExecMode
+	DB *sql.DB
 }
 
-func (r *PlanRepo) Save(plan plan.Plan) error {
-	return nil
+func NewPlanRepo(DB *sql.DB) repository.PlanRepository {
+	return &PlanRepo{DB: DB}
 }
-func (r *PlanRepo) GetByResearvationID(reservationID plan.ReservationID) plan.Plan {
-	return plan.Plan{}
+
+func (r *PlanRepo) GetByResearvationID(ctx context.Context, resvID plan.ReservationID) (*plan.Plan, error) {
+	return &plan.Plan{}, nil
+}
+func (r *PlanRepo) Store(ctx context.Context, plan *plan.Plan) error {
+	return nil
 }
