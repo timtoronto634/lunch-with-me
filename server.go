@@ -1,20 +1,26 @@
 package main
 
 import (
-	"database/sql"
+	"context"
 	"echo-me/presentation"
-	"log/slog"
+	"net/http"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 )
 
 func main() {
-	db, err := sql.Open("sqlite3", "./foo.db")
+	connStr := "postgresql://postgres:devsample@localhost:5432/psql?sslmode=disable"
+	pool, err := pgxpool.New(context.Background(), connStr)
 	if err != nil {
-		slog.Error(err.Error())
+		panic(err)
 	}
-	defer db.Close()
 
-	server := presentation.SetupServer()
-	server.Start(":1323")
+	router := presentation.SetupServer(pool)
+	http.ListenAndServe(
+		"localhost:8080",
+		h2c.NewHandler(router, &http2.Server{}),
+	)
 }
