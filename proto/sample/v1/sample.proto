@@ -20,7 +20,17 @@ message ErrResponse {
   string ans = 1;
 }
 
+message DetaildErrRequest {
+
+}
+
+message DetaildErrResponse {
+  
+}
+
+
 service SampleService {
   rpc Greet(GreetRequest) returns (GreetResponse) {}
   rpc Err(ErrRequest) returns (ErrResponse) {}
+  rpc DetaildErr(DetaildErrRequest) returns (DetaildErrResponse) {}
 }

@@ -37,12 +37,16 @@ const (
 	SampleServiceGreetProcedure = "/proto.sample.v1.SampleService/Greet"
 	// SampleServiceErrProcedure is the fully-qualified name of the SampleService's Err RPC.
 	SampleServiceErrProcedure = "/proto.sample.v1.SampleService/Err"
+	// SampleServiceDetaildErrProcedure is the fully-qualified name of the SampleService's DetaildErr
+	// RPC.
+	SampleServiceDetaildErrProcedure = "/proto.sample.v1.SampleService/DetaildErr"
 )
 
 // SampleServiceClient is a client for the proto.sample.v1.SampleService service.
 type SampleServiceClient interface {
 	Greet(context.Context, *connect.Request[v1.GreetRequest]) (*connect.Response[v1.GreetResponse], error)
 	Err(context.Context, *connect.Request[v1.ErrRequest]) (*connect.Response[v1.ErrResponse], error)
+	DetaildErr(context.Context, *connect.Request[v1.DetaildErrRequest]) (*connect.Response[v1.DetaildErrResponse], error)
 }
 
 // NewSampleServiceClient constructs a client for the proto.sample.v1.SampleService service. By
@@ -65,13 +69,19 @@ func NewSampleServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			baseURL+SampleServiceErrProcedure,
 			opts...,
 		),
+		detaildErr: connect.NewClient[v1.DetaildErrRequest, v1.DetaildErrResponse](
+			httpClient,
+			baseURL+SampleServiceDetaildErrProcedure,
+			opts...,
+		),
 	}
 }
 
 // sampleServiceClient implements SampleServiceClient.
 type sampleServiceClient struct {
-	greet *connect.Client[v1.GreetRequest, v1.GreetResponse]
-	err   *connect.Client[v1.ErrRequest, v1.ErrResponse]
+	greet      *connect.Client[v1.GreetRequest, v1.GreetResponse]
+	err        *connect.Client[v1.ErrRequest, v1.ErrResponse]
+	detaildErr *connect.Client[v1.DetaildErrRequest, v1.DetaildErrResponse]
 }
 
 // Greet calls proto.sample.v1.SampleService.Greet.
@@ -84,10 +94,16 @@ func (c *sampleServiceClient) Err(ctx context.Context, req *connect.Request[v1.E
 	return c.err.CallUnary(ctx, req)
 }
 
+// DetaildErr calls proto.sample.v1.SampleService.DetaildErr.
+func (c *sampleServiceClient) DetaildErr(ctx context.Context, req *connect.Request[v1.DetaildErrRequest]) (*connect.Response[v1.DetaildErrResponse], error) {
+	return c.detaildErr.CallUnary(ctx, req)
+}
+
 // SampleServiceHandler is an implementation of the proto.sample.v1.SampleService service.
 type SampleServiceHandler interface {
 	Greet(context.Context, *connect.Request[v1.GreetRequest]) (*connect.Response[v1.GreetResponse], error)
 	Err(context.Context, *connect.Request[v1.ErrRequest]) (*connect.Response[v1.ErrResponse], error)
+	DetaildErr(context.Context, *connect.Request[v1.DetaildErrRequest]) (*connect.Response[v1.DetaildErrResponse], error)
 }
 
 // NewSampleServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -106,12 +122,19 @@ func NewSampleServiceHandler(svc SampleServiceHandler, opts ...connect.HandlerOp
 		svc.Err,
 		opts...,
 	)
+	sampleServiceDetaildErrHandler := connect.NewUnaryHandler(
+		SampleServiceDetaildErrProcedure,
+		svc.DetaildErr,
+		opts...,
+	)
 	return "/proto.sample.v1.SampleService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SampleServiceGreetProcedure:
 			sampleServiceGreetHandler.ServeHTTP(w, r)
 		case SampleServiceErrProcedure:
 			sampleServiceErrHandler.ServeHTTP(w, r)
+		case SampleServiceDetaildErrProcedure:
+			sampleServiceDetaildErrHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -127,4 +150,8 @@ func (UnimplementedSampleServiceHandler) Greet(context.Context, *connect.Request
 
 func (UnimplementedSampleServiceHandler) Err(context.Context, *connect.Request[v1.ErrRequest]) (*connect.Response[v1.ErrResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.sample.v1.SampleService.Err is not implemented"))
+}
+
+func (UnimplementedSampleServiceHandler) DetaildErr(context.Context, *connect.Request[v1.DetaildErrRequest]) (*connect.Response[v1.DetaildErrResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.sample.v1.SampleService.DetaildErr is not implemented"))
 }

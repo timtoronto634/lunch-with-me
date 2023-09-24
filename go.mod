@@ -13,6 +13,7 @@ require (
 	github.com/jackc/pgx/v5 v5.4.3
 	github.com/mattn/go-sqlite3 v1.14.17
 	golang.org/x/net v0.11.0
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230920204549-e6e6cdab5c13
 	google.golang.org/protobuf v1.31.0
 )
 
