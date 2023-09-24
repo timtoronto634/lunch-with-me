@@ -3,8 +3,12 @@ package main
 import (
 	"context"
 	"echo-me/presentation"
+	"fmt"
+	"log/slog"
 	"net/http"
+	"os"
 
+	"github.com/gorilla/handlers"
 	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/net/http2"
@@ -19,8 +23,11 @@ func main() {
 	}
 
 	router := presentation.SetupServer(pool)
-	http.ListenAndServe(
-		"localhost:8080",
-		h2c.NewHandler(router, &http2.Server{}),
-	)
+	loggedRouter := handlers.LoggingHandler(os.Stdout, router)
+	port := 8088
+	slog.Info(fmt.Sprintf("running server at %v", port))
+	slog.Error("error: %v", http.ListenAndServe(
+		fmt.Sprintf("localhost:%d", port),
+		h2c.NewHandler(loggedRouter, &http2.Server{}),
+	))
 }
