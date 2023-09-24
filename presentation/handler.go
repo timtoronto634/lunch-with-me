@@ -2,9 +2,9 @@ package presentation
 
 import (
 	"context"
+	"echo-me/gen/proto/sample/v1/samplev1connect"
 	v1 "echo-me/gen/proto/v1"
 	"echo-me/gen/proto/v1/slotv1connect"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -30,9 +30,8 @@ func (s slotService) SaveSlot(ctx context.Context, req *connect.Request[v1.SaveS
 func SetupServer(db *pgxpool.Pool) *mux.Router {
 	r := mux.NewRouter()
 	// r.Handle("/", LoggingMiddleware)
-	path, handler := slotv1connect.NewSlotServiceHandler(slotService{})
-	fmt.Println(path, handler)
-	r.Handle(path, handler)
+	r.Handle(slotv1connect.NewSlotServiceHandler(slotService{}))
+	r.Handle(samplev1connect.NewSampleServiceHandler(UnimplementedSampleServiceHandler{}))
 	return r
 }
 
