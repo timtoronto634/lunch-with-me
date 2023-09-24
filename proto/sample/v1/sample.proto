@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package proto.sample.v1;
+
+option go_package = "echo-me/gen/proto/sample/v1;samplev1";
+
+message GreetRequest {
+  string name = 1;
+}
+
+message GreetResponse {
+  string greeting = 1;
+}
+
+service SampleService {
+  rpc Greet(GreetRequest) returns (GreetResponse) {}
+}
