@@ -35,11 +35,14 @@ const (
 const (
 	// SampleServiceGreetProcedure is the fully-qualified name of the SampleService's Greet RPC.
 	SampleServiceGreetProcedure = "/proto.sample.v1.SampleService/Greet"
+	// SampleServiceErrProcedure is the fully-qualified name of the SampleService's Err RPC.
+	SampleServiceErrProcedure = "/proto.sample.v1.SampleService/Err"
 )
 
 // SampleServiceClient is a client for the proto.sample.v1.SampleService service.
 type SampleServiceClient interface {
 	Greet(context.Context, *connect.Request[v1.GreetRequest]) (*connect.Response[v1.GreetResponse], error)
+	Err(context.Context, *connect.Request[v1.ErrRequest]) (*connect.Response[v1.ErrResponse], error)
 }
 
 // NewSampleServiceClient constructs a client for the proto.sample.v1.SampleService service. By
@@ -57,12 +60,18 @@ func NewSampleServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			baseURL+SampleServiceGreetProcedure,
 			opts...,
 		),
+		err: connect.NewClient[v1.ErrRequest, v1.ErrResponse](
+			httpClient,
+			baseURL+SampleServiceErrProcedure,
+			opts...,
+		),
 	}
 }
 
 // sampleServiceClient implements SampleServiceClient.
 type sampleServiceClient struct {
 	greet *connect.Client[v1.GreetRequest, v1.GreetResponse]
+	err   *connect.Client[v1.ErrRequest, v1.ErrResponse]
 }
 
 // Greet calls proto.sample.v1.SampleService.Greet.
@@ -70,9 +79,15 @@ func (c *sampleServiceClient) Greet(ctx context.Context, req *connect.Request[v1
 	return c.greet.CallUnary(ctx, req)
 }
 
+// Err calls proto.sample.v1.SampleService.Err.
+func (c *sampleServiceClient) Err(ctx context.Context, req *connect.Request[v1.ErrRequest]) (*connect.Response[v1.ErrResponse], error) {
+	return c.err.CallUnary(ctx, req)
+}
+
 // SampleServiceHandler is an implementation of the proto.sample.v1.SampleService service.
 type SampleServiceHandler interface {
 	Greet(context.Context, *connect.Request[v1.GreetRequest]) (*connect.Response[v1.GreetResponse], error)
+	Err(context.Context, *connect.Request[v1.ErrRequest]) (*connect.Response[v1.ErrResponse], error)
 }
 
 // NewSampleServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -86,10 +101,17 @@ func NewSampleServiceHandler(svc SampleServiceHandler, opts ...connect.HandlerOp
 		svc.Greet,
 		opts...,
 	)
+	sampleServiceErrHandler := connect.NewUnaryHandler(
+		SampleServiceErrProcedure,
+		svc.Err,
+		opts...,
+	)
 	return "/proto.sample.v1.SampleService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SampleServiceGreetProcedure:
 			sampleServiceGreetHandler.ServeHTTP(w, r)
+		case SampleServiceErrProcedure:
+			sampleServiceErrHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -101,4 +123,8 @@ type UnimplementedSampleServiceHandler struct{}
 
 func (UnimplementedSampleServiceHandler) Greet(context.Context, *connect.Request[v1.GreetRequest]) (*connect.Response[v1.GreetResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.sample.v1.SampleService.Greet is not implemented"))
+}
+
+func (UnimplementedSampleServiceHandler) Err(context.Context, *connect.Request[v1.ErrRequest]) (*connect.Response[v1.ErrResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.sample.v1.SampleService.Err is not implemented"))
 }

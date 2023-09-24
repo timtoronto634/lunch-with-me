@@ -12,6 +12,15 @@ message GreetResponse {
   string greeting = 1;
 }
 
+message ErrRequest {
+  int64 idx = 1;
+}
+
+message ErrResponse {
+  string ans = 1;
+}
+
 service SampleService {
   rpc Greet(GreetRequest) returns (GreetResponse) {}
+  rpc Err(ErrRequest) returns (ErrResponse) {}
 }
