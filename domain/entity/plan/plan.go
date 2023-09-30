@@ -16,6 +16,16 @@ func NewPlan(hostID hostUserID, date time.Time) *Plan {
 	}
 }
 
+func (p *Plan) Settle(rID ReservationID) error {
+	if p.Candidate.status != Scheduled {
+		return errors.New("candidate is not wainting for settlement")
+	}
+
+	p.Candidate.status = Completed
+
+	return nil
+}
+
 func (p *Plan) Request(guestUserID guestUserID) error {
 	if p.Candidate.status != Open {
 		return errors.New("candidate is not open for reservation")
