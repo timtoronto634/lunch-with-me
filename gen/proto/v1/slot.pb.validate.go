@@ -57,16 +57,7 @@ func (m *SaveSlotRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() <= 0 {
-		err := SaveSlotRequestValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Id
 
 	// no validation rules for Name
 
