@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	connStr := "postgresql://postgres:devsample@localhost:5432/psql?sslmode=disable"
+	connStr := "postgresql://postgres:postgres@localhost:5432/psql?sslmode=disable"
 	pool, err := pgxpool.New(context.Background(), connStr)
 	if err != nil {
 		panic(err)
