@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"echo-me/infra"
 	"echo-me/presentation"
 	"fmt"
 	"log/slog"
@@ -17,12 +18,13 @@ import (
 
 func main() {
 	connStr := "postgresql://postgres:postgres@localhost:5432/psql?sslmode=disable"
-	pool, err := pgxpool.New(context.Background(), connStr)
+	db, err := pgxpool.New(context.Background(), connStr)
 	if err != nil {
 		panic(err)
 	}
+	infra.DB = db
 
-	router := presentation.SetupServer(pool)
+	router := presentation.SetupServer(db)
 	loggedRouter := handlers.LoggingHandler(os.Stdout, router)
 	port := 8088
 	slog.Info(fmt.Sprintf("running server at %v", port))

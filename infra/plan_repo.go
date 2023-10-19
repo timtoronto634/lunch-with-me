@@ -2,15 +2,16 @@ package infra
 
 import (
 	"context"
-	"database/sql"
 	"echo-me/domain/entity/plan"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type PlanRepo struct {
-	DB *sql.DB
+	DB *pgxpool.Pool
 }
 
-func NewPlanRepo(DB *sql.DB) plan.Repository {
+func NewPlanRepo(DB *pgxpool.Pool) plan.Repository {
 	return &PlanRepo{DB: DB}
 }
 

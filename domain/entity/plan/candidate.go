@@ -8,10 +8,9 @@ import (
 )
 
 type CandidateID uuid.UUID
-type hostUserID user.UserID
 type Candidate struct {
 	ID           CandidateID
-	hostID       hostUserID
+	hostID       user.UserID
 	internalTime time.Time
 	status       CandidateStatus
 }
@@ -25,7 +24,7 @@ const (
 	Deleted   CandidateStatus = "deleted"
 )
 
-func NewCandidate(hostID hostUserID, date time.Time) *Candidate {
+func NewCandidate(hostID user.UserID, date time.Time) *Candidate {
 	return &Candidate{
 		ID:           generateCandidateID(),
 		hostID:       hostID,

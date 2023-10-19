@@ -2,6 +2,7 @@ package plan
 
 import (
 	"context"
+	"echo-me/domain/entity/user"
 	"errors"
 	"time"
 )
@@ -16,7 +17,7 @@ type Repository interface {
 	Save(ctx context.Context, p *Plan) error
 }
 
-func NewPlan(hostID hostUserID, date time.Time) *Plan {
+func NewPlan(hostID user.UserID, date time.Time) *Plan {
 	return &Plan{
 		Candidate: NewCandidate(hostID, date),
 	}
