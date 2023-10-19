@@ -9,3 +9,7 @@ type User struct {
 	Name  string
 	Email string
 }
+
+type Repository interface {
+	GetByID()
+}

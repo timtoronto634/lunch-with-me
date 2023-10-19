@@ -1,6 +1,7 @@
 package plan
 
 import (
+	"context"
 	"errors"
 	"time"
 )
@@ -8,6 +9,11 @@ import (
 type Plan struct {
 	Candidate    *Candidate
 	Reservations []*reservation
+}
+
+type Repository interface {
+	GetByResearvationID(ctx context.Context, id ReservationID) (*Plan, error)
+	Save(ctx context.Context, p *Plan) error
 }
 
 func NewPlan(hostID hostUserID, date time.Time) *Plan {
